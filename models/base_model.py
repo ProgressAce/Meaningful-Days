@@ -1,45 +1,37 @@
-"""Defines a class to serve as a base class SQLAlchemy ORM mapping."""
+"""Defines a class to serve as a base class for SQLAlchemy ORM mapping."""
 
-from datetime import datetime
-from models import db
+from datetime import date
 from sqlalchemy import Integer, String, DateTime, Column
-from sqlalchemy.ext.declarative import declaritive_base
+from sqlalchemy.ext.declarative import declarative_base
+import models
 
-OrmBase = declaritive_base()
+OrmBase = declarative_base()
 
-class BaseModel():
+
+class BaseModel:
     """Serves as the base class for classes undergoing ORM mapping"""
 
     id = Column(Integer, primary_key=True)
     title = Column(String(50), nullable=False)
-    created_date = Column(DateTime, default=datetime.now())
+    created_date = Column(DateTime, default=date.today())
     target_date = Column(DateTime, nullable=False)
     completed_date = Column(DateTime, default=None, nullable=True)
-    status = Column(String(10), default='active')
+    status = Column(String(10), default="active")
 
-    def __init__(self, title, target_date) -> None:
+    def __init__(self, title, target_date):
         """Initialising an object."""
-        # validate arguments
-        try:
-            if not isinstance(title, str):
-                raise TypeError('Your title should be completed.')
-            if len(title) < 1:
-                raise ValueError
-            
-            if not isinstance(target_date, datetime):
-                raise TypeError('Your target date should be set.')
-            if target_date < self.created_date:
-                raise ValueError('')
-        except (TypeError, ValueError):
-            pass
-        else:
-            self.title = title
-            self.target_date = target_date
+        # validate arguments elsewhere
+        self.title = title
+        self.target_date = target_date
+
+    def __str__(self):
+        """Informal string representation for daily_kpi object"""
+        return self.__class__.__name__
 
     def save(self):
         """Adds and commits the current object to the database."""
-        db.new(self)
-        db.save()
+        models.db.new(self)
+        models.db.save()
 
     def delete(self):
         """Deletes the current object from the database."""
@@ -49,7 +41,10 @@ class BaseModel():
         # validate argument
         #
         self.completed_date = completed_date
-        self.status = 'inactive'
+        self.status = "inactive"
 
-if __name__ == '__main__':
-    print("Let's get this started and sonn ready for testing, deployment and production")
+
+if __name__ == "__main__":
+    print(
+        "Let's get this started and sonn ready for testing, deployment and production"
+    )
