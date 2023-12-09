@@ -38,7 +38,6 @@ class HomeGUI:
             text="Structured Living",
             font=("Freestyle Script", 40),
             text_color="orange",
-            fg_color="black",
         )
         home_lbl.grid(
             column=round(self.column_num / 2) - 1, row=0, columnspan=2, pady=10
