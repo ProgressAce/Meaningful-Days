@@ -36,11 +36,11 @@ class HomeGUI:
         home_lbl = ctk.CTkLabel(
             self.home_frame,
             text="Structured Living",
-            font=("Freestyle Script", 40),
+            font=("Freestyle Script", 43),
             text_color="orange",
         )
         home_lbl.grid(
-            column=round(self.column_num / 2) - 1, row=0, columnspan=2, pady=10
+            column=round(self.column_num / 2) - 1, row=0, columnspan=2, pady=8
         )
 
     def load_home_buttons(self):
@@ -68,5 +68,5 @@ class HomeGUI:
                 command=cls_with_args,
                 fg_color="grey",
             )
-            button.grid(column=index, row=1, pady=14, sticky="n")
+            button.grid(column=index, row=1, pady=12, sticky="n")
             index += 1
