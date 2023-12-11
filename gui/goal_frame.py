@@ -73,6 +73,8 @@ class GoalFrame:
         goal_frame.columnconfigure(1, weight=1)
         goal_frame.columnconfigure(2, weight=1)
         goal_frame.columnconfigure(3, weight=1)
+        goal_frame.rowconfigure(0, weight=0)
+        goal_frame.rowconfigure(1, weight=0)
         goal_frame.grid(
             column=0, row=2, columnspan=self.column_num, padx=10, pady=10, sticky="nsew"
         )
@@ -111,20 +113,21 @@ class GoalFrame:
 
     def get_active_goals_subgoals(self, clss):
         """Returns a list of all the active goals/subgoals from the database."""
+
         objectives = models.db.all(clss)
         active_objectives = []
         for obj in objectives:
             if obj.status == "active":
-                title = f"({obj.id}). {obj.title}"
-                active_objectives.append(title)
+                active_objectives.append(obj)
 
         return active_objectives
 
-    def display_goals(self):
+    def display_goals_subgoals(self, goal_frame):
         """Creates the widgets for displaying a list of all the active goals.
         All the goals are taken from the storage system."""
 
         pass
+
 
     def goal_adding_layout(self, goal_frame):
         """Creates the widgets for adding goals and subgoals"""
@@ -208,9 +211,13 @@ class GoalFrame:
 
             # retrieve options for combobox
             active_goals = self.get_active_goals_subgoals(Goal)
+            goal_titles = []
+            for goal in active_goals:
+                title = f"({goal.id}). {goal.title}"
+                goal_titles.append(title)
 
             goal_cmbox = ctk.CTkComboBox(
-                add_frame, values=active_goals, width=240, height=38
+                add_frame, values=goal_titles, width=240, height=38
             )
             goal_cmbox.grid(column=1, row=1, pady=2, padx=12)
 
