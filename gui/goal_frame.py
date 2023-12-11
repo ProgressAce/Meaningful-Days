@@ -1,6 +1,7 @@
 """Creates the goal frame interface."""
 
 from functools import partial
+from tkinter import messagebox
 import customtkinter as ctk
 import tkcalendar as tkcal
 from models.goal import Goal
@@ -20,9 +21,13 @@ class GoalFrame:
                     the home_frame.
             column_num(int): the total column number of home_frame"""
 
+        # for goal_frame
         self.home_frame = home_frame
         self.current_frame = current_frame
         self.column_num = column_num
+
+        # for goal_frame's add_frame
+        self.current_add_frame = None
 
         self.load_goal_frame()
 
@@ -33,6 +38,20 @@ class GoalFrame:
             for child in frame.winfo_children():
                 child.destroy()
             frame.destroy()
+
+    def on_close(self, window):
+        """Handles event when window is exited.
+
+        The current_add_frame is set to None so that when the add_window is closed
+        and reopened, the current_add_frame won't hold onto parent window
+        which was destroyed on exit.
+        """
+        if messagebox.askokcancel(
+            "Closing the current window",
+            "Are you certain you want to close it? Unsaved information will be lost.",
+        ):
+            self.current_add_frame = None
+            window.destroy()
 
     def center(self, top_window):
         """Finds the center of the screen and centers the toplevel window."""
@@ -94,18 +113,8 @@ class GoalFrame:
         )
         selection_lbl.grid(column=0, row=0, columnspan=2, pady=18)
 
-        add_frame = ctk.CTkFrame(
-            add_window,
-            fg_color="#fceab8",
-            border_width=1,
-            border_color="black",
-        )
-        add_frame.columnconfigure(0, weight=1)
-        add_frame.columnconfigure(1, weight=1)
-        add_frame.grid(column=0, row=2, columnspan=2, sticky="nsew", pady=14, padx=12)
-
         radio_var = ctk.StringVar(add_window, value="none")
-        add_form_method = partial(self.add_form, add_frame, radio_var)
+        add_form_method = partial(self.add_form, add_window, radio_var)
 
         # Radio buttons for picking between goal and subgoal
         goal_rad = ctk.CTkRadioButton(
@@ -126,16 +135,32 @@ class GoalFrame:
         )
         subgoal_rad.grid(column=1, row=1, pady=5, padx=6)
 
-    def add_form(self, add_frame, radio_var):
+    def add_form(self, add_window, radio_var):
         """Create the widgets for entering information for a new goal."""
 
-        print("Radio_var value:", radio_var.get())
+        # handles the event of the add window closing
+        on_close_method = partial(self.on_close, add_window)
+        add_window.protocol("WM_DELETE_WINDOW", on_close_method)
+
+        self.remove_frame(self.current_add_frame)
+
+        add_frame = ctk.CTkFrame(
+            add_window,
+            fg_color="#fceab8",
+            border_width=1,
+            border_color="black",
+        )
+        add_frame.columnconfigure(0, weight=1)
+        add_frame.columnconfigure(1, weight=1)
+        add_frame.grid(column=0, row=2, columnspan=2, sticky="nsew", pady=14, padx=12)
+
+        self.current_add_frame = add_frame
 
         # defining variables and widgets based on radio button selection
         if radio_var.get() == "goal":
             goal_text = "Enter the new goal:"
             submit_btn_text = "Submit new goal '~'"
-            submit_command = self.insert_new_goal
+            submit_command = self.create_new_goal
 
         elif radio_var.get() == "subgoal":
             goal_text = "Enter the new subgoal:"
@@ -162,7 +187,7 @@ class GoalFrame:
             goal_cmbox.grid(column=1, row=1, pady=2, padx=12)
 
             submit_btn_text = "Submit new subgoal '~'"
-            submit_command = self.insert_new_subgoal
+            submit_command = self.create_new_subgoal
 
         title_lbl = ctk.CTkLabel(
             add_frame,
@@ -199,12 +224,26 @@ class GoalFrame:
         )
         submit_btn.grid(column=0, row=7, pady=10, padx=10, columnspan=2, rowspan=2)
 
-    def insert_new_goal(self):
+        print(target_calendar)
+
+    def create_new_goal(self, title, target_date):
         """Inserts a new goal into the goal database table."""
+
+        # validate args
+        if not isinstance(title, str):
+            raise TypeError(
+                "The title should contain atleast some letters. We only speak ascii :("
+            )
+
+        if len(title) < 1 or len(title) > 50:
+            raise ValueError("The title should be between 1 and 50 characters long.")
+
+    def create_new_subgoal(self):
+        """Inserts a new subgoal into the subgoal database table."""
         pass
 
-    def insert_new_subgoal(self):
-        """Inserts a new subgoal into the subgoal database table."""
+    def save_new_goal(self):
+        """Inserts a new goal or subgoal into its respective database table."""
         pass
 
         # list of active goals from database, dropdown menu list of
