@@ -141,16 +141,19 @@ class GoalFrame:
         # text_display.tag_config("subgoals", font=("Cambria", 24))
         # text_display.tag_config("time-left", font=("Cambria", 26, "italic"))
 
+        # tab works as intended - text_display.insert("0.0", "Active Goals & Subgoals\n\n\tmr.Tab\n")
         text_display.insert("0.0", "Active Goals & Subgoals\n\n")
 
         goals = self.get_active_goals_subgoals(Goal)
         for i, goal in enumerate(goals):
-            text_display.insert(ctk.END, f"({i}). {goal.title}\t")
-            text_display.insert(ctk.END, f"Target date: {goal.target_date}\n")
+            text_display.insert(ctk.END, f"({i}). {goal.title}")
+            text_display.insert(ctk.END, f"    Target date: {goal.get_target_date()}\n")
 
             for subgoal in goal.sub_goals:
-                text_display.insert(ctk.END, f"~~ {subgoal.title}\t")
-                text_display.insert(ctk.END, f"Target date: {subgoal.target_date}\n")
+                text_display.insert(ctk.END, f"~~ {subgoal.title}")
+                text_display.insert(
+                    ctk.END, f"    Target date: {subgoal.get_target_date()}\n"
+                )
 
             text_display.insert(ctk.END, "\n")
 
