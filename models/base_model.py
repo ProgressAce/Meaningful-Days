@@ -36,6 +36,12 @@ class BaseModel:
     def delete(self):
         """Deletes the current object from the database."""
 
+    def get_target_date(self):
+        """Returns target date attribute as a date without the time."""
+
+        date_str = self.target_date.strftime("%d-%m-%Y")
+        return date_str
+
     def mark_complete(self, completed_date):
         """Checks an object as complete."""
         # validate argument
