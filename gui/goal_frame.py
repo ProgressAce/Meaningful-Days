@@ -146,7 +146,7 @@ class GoalFrame:
 
         goals = self.get_active_goals_subgoals(Goal)
         for i, goal in enumerate(goals):
-            text_display.insert(ctk.END, f"({i}). {goal.title}")
+            text_display.insert(ctk.END, f"({i + 1}). {goal.title}")
             text_display.insert(ctk.END, f"    Target date: {goal.get_target_date()}\n")
 
             for subgoal in goal.sub_goals:
