@@ -81,10 +81,9 @@ class GoalFrame:
 
         self.current_frame = goal_frame
 
-        self.
+        self.display_goals_subgoals(goal_frame)
 
         goal_adding_method = partial(self.goal_adding_layout, goal_frame)
-
 
         # frame for holding all the buttons
         # button_frame = ctk.CTkFrame(
@@ -126,8 +125,36 @@ class GoalFrame:
         """Creates the widgets for displaying a list of all the active goals.
         All the goals are taken from the storage system."""
 
-        pass
+        text_display = ctk.CTkTextbox(
+            goal_frame, fg_color="#fceab8", font=("Cambria", 14)
+        )
+        text_display.grid(
+            column=0, row=2, columnspan=6, sticky="nsew", padx=15, pady=15
+        )
+        goal_frame.rowconfigure(2, weight=4)
 
+        # additional text insertion styles
+        # creating placeholders for text to have certain styles
+        # text_display.tag_add("heading", ctk.END)
+        # text_display.tag_config("heading", font=("Times New Roman", 35, "bold"))
+        # text_display.tag_config("goals", font=("Cambria", 28))
+        # text_display.tag_config("subgoals", font=("Cambria", 24))
+        # text_display.tag_config("time-left", font=("Cambria", 26, "italic"))
+
+        text_display.insert("0.0", "Active Goals & Subgoals\n\n")
+
+        goals = self.get_active_goals_subgoals(Goal)
+        for i, goal in enumerate(goals):
+            text_display.insert(ctk.END, f"({i}). {goal.title}\t")
+            text_display.insert(ctk.END, f"Target date: {goal.target_date}\n")
+
+            for subgoal in goal.sub_goals:
+                text_display.insert(ctk.END, f"~~ {subgoal.title}\t")
+                text_display.insert(ctk.END, f"Target date: {subgoal.target_date}\n")
+
+            text_display.insert(ctk.END, "\n")
+
+        text_display.configure(state="disabled")
 
     def goal_adding_layout(self, goal_frame):
         """Creates the widgets for adding goals and subgoals"""
