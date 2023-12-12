@@ -1,5 +1,6 @@
 """Creates the goal frame interface."""
 
+from datetime import date
 from functools import partial
 from tkinter import messagebox
 import customtkinter as ctk
@@ -222,11 +223,26 @@ class GoalFrame:
 
         self.current_add_frame = add_frame
 
+        # the widgets for entering the information of a new goal/subgoal
+        title_entry = ctk.CTkEntry(
+            add_frame,
+            height=42,
+            width=300,
+            placeholder_text="...that you have decided to dedicate yourself to",
+        )
+        title_entry.grid(column=0, row=1, pady=2, padx=12)
+
+        target_calendar = tkcal.Calendar(
+            add_frame, selectmode="day", date_pattern="y-mm-dd"
+        )
+        target_calendar.grid(column=0, row=3, pady=12, padx=12, rowspan=3)
+        print(type(target_calendar.parse_date(target_calendar.get_date())))
+
         # defining variables and widgets based on radio button selection
         if radio_var.get() == "goal":
             goal_text = "Enter the new goal:"
             submit_btn_text = "Submit new goal '~'"
-            submit_command = self.create_new_goal
+            submit_command = partial(self.create_new_goal, title_entry, target_calendar)
 
         elif radio_var.get() == "subgoal":
             goal_text = "Enter the new subgoal:"
@@ -252,7 +268,9 @@ class GoalFrame:
             goal_cmbox.grid(column=1, row=1, pady=2, padx=12)
 
             submit_btn_text = "Submit new subgoal '~'"
-            submit_command = self.create_new_subgoal
+            submit_command = partial(
+                self.create_new_subgoal, title_entry, target_calendar, goal_cmbox
+            )
 
         title_lbl = ctk.CTkLabel(
             add_frame,
@@ -262,23 +280,10 @@ class GoalFrame:
         )
         title_lbl.grid(column=0, row=0, pady=12, padx=12)
 
-        title_entry = ctk.CTkEntry(
-            add_frame,
-            height=42,
-            width=300,
-            placeholder_text="...that you have decided to dedicate yourself to",
-        )
-        title_entry.grid(column=0, row=1, pady=2, padx=12)
-
         target_date_lbl = ctk.CTkLabel(
             add_frame, text="Target Date for completion:", font=("Arial", 24)
         )
         target_date_lbl.grid(column=0, row=2, pady=20, padx=12)
-
-        target_calendar = tkcal.Calendar(
-            add_frame, selectmode="day", date_pattern="y-mm-dd"
-        )
-        target_calendar.grid(column=0, row=3, pady=12, padx=12, rowspan=3)
 
         submit_btn = ctk.CTkButton(
             add_frame,
@@ -289,13 +294,15 @@ class GoalFrame:
         )
         submit_btn.grid(column=0, row=7, pady=10, padx=10, columnspan=2, rowspan=2)
 
-        print(target_calendar)
-
-    def create_new_goal(self, title, target_date):
+    def create_new_goal(self, title_entry, target_calendar):
         """Inserts a new goal into the goal database table."""
 
+        title = title_entry.get()
+        target_date = target_calendar.parse_date(target_calendar.get_date())
+        today = date.today()
+
         # validate args
-        if not isinstance(title, str):
+        if not isinstance(title_entry.get(), str):
             raise TypeError(
                 "The title should contain atleast some letters. We only speak ascii :("
             )
@@ -303,9 +310,48 @@ class GoalFrame:
         if len(title) < 1 or len(title) > 50:
             raise ValueError("The title should be between 1 and 50 characters long.")
 
-    def create_new_subgoal(self):
+        print("target date type:", type(target_date))
+        if target_date <= today:
+            raise ValueError(
+                "The selected target date should be a future day that has not yet come"
+            )
+
+        print("title:", title)
+        print("target date type:", type(target_date))
+        print("target date:", target_date)
+
+        # Earn $10000 monthly as passive income from my online and offline businesses
+
+    def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox):
         """Inserts a new subgoal into the subgoal database table."""
-        pass
+
+        title = title_entry.get()
+        target_date = target_calendar.parse_date(target_calendar.get_date())
+        goal_title = goal_cmbox.get()
+        today = date.today()
+
+        # validate args
+        if not isinstance(title_entry.get(), str):
+            raise TypeError(
+                "The title should contain atleast some letters. We only speak ascii :("
+            )
+
+        if len(title) < 1 or len(title) > 50:
+            raise ValueError("The title should be between 1 and 50 characters long.")
+
+        if target_date <= today:
+            raise ValueError(
+                "The selected target date should be a future day that has not yet come"
+            )
+
+        if goal_title is None:
+            raise ValueError("Please select a main goal that your new subgoal is for.")
+
+        print("title:", title)
+        print("target date type:", type(target_date))
+        print("target date:", target_date)
+        print("goal_title type:", type(goal_title))
+        print("goal_title:", goal_title)
 
     def save_new_goal(self):
         """Inserts a new goal or subgoal into its respective database table."""
