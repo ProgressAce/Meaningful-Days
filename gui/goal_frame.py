@@ -126,7 +126,7 @@ class GoalFrame:
         All the goals are taken from the storage system."""
 
         text_display = ctk.CTkTextbox(
-            goal_frame, fg_color="#fceab8", font=("Cambria", 14)
+            goal_frame, fg_color="#fceab8", font=("Cambria", 20)
         )
         text_display.grid(
             column=0, row=2, columnspan=6, sticky="nsew", padx=15, pady=15
@@ -242,8 +242,8 @@ class GoalFrame:
             # retrieve options for combobox
             active_goals = self.get_active_goals_subgoals(Goal)
             goal_titles = []
-            for goal in active_goals:
-                title = f"({goal.id}). {goal.title}"
+            for i, goal in enumerate(active_goals):
+                title = f"({i + 1}). {goal.title}"
                 goal_titles.append(title)
 
             goal_cmbox = ctk.CTkComboBox(
