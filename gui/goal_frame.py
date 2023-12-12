@@ -73,13 +73,30 @@ class GoalFrame:
         goal_frame.columnconfigure(1, weight=1)
         goal_frame.columnconfigure(2, weight=1)
         goal_frame.columnconfigure(3, weight=1)
+        goal_frame.rowconfigure(0, weight=0)
+        goal_frame.rowconfigure(1, weight=0)
         goal_frame.grid(
             column=0, row=2, columnspan=self.column_num, padx=10, pady=10, sticky="nsew"
         )
 
         self.current_frame = goal_frame
 
+        self.display_goals_subgoals(goal_frame)
+
         goal_adding_method = partial(self.goal_adding_layout, goal_frame)
+
+        # frame for holding all the buttons
+        # button_frame = ctk.CTkFrame(
+        #     goal_frame,
+        #     fg_color="#fceab8",
+        #     border_width=2,
+        #     border_color="grey",
+        # )
+        # button_frame.columnconfigure(0, weight=1)
+        # button_frame.columnconfigure(1, weight=1)
+        # button_frame.columnconfigure(2, weight=1)
+        # button_frame.columnconfigure(3, weight=1)
+        # button_frame.grid(column=0, row=0, columnspan=2, sticky='nsew')
 
         # button for adding a new goal
         add_btn = ctk.CTkButton(
@@ -92,6 +109,55 @@ class GoalFrame:
             command=goal_adding_method,
         )
         add_btn.grid(column=4, row=0, padx=5, pady=5)
+
+    def get_active_goals_subgoals(self, clss):
+        """Returns a list of all the active goals/subgoals from the database."""
+
+        objectives = models.db.all(clss)
+        active_objectives = []
+        for obj in objectives:
+            if obj.status == "active":
+                active_objectives.append(obj)
+
+        return active_objectives
+
+    def display_goals_subgoals(self, goal_frame):
+        """Creates the widgets for displaying a list of all the active goals.
+        All the goals are taken from the storage system."""
+
+        text_display = ctk.CTkTextbox(
+            goal_frame, fg_color="#fceab8", font=("Cambria", 20)
+        )
+        text_display.grid(
+            column=0, row=2, columnspan=6, sticky="nsew", padx=15, pady=15
+        )
+        goal_frame.rowconfigure(2, weight=4)
+
+        # additional text insertion styles
+        # creating placeholders for text to have certain styles
+        # text_display.tag_add("heading", ctk.END)
+        # text_display.tag_config("heading", font=("Times New Roman", 35, "bold"))
+        # text_display.tag_config("goals", font=("Cambria", 28))
+        # text_display.tag_config("subgoals", font=("Cambria", 24))
+        # text_display.tag_config("time-left", font=("Cambria", 26, "italic"))
+
+        # tab works as intended - text_display.insert("0.0", "Active Goals & Subgoals\n\n\tmr.Tab\n")
+        text_display.insert("0.0", "Active Goals & Subgoals\n\n")
+
+        goals = self.get_active_goals_subgoals(Goal)
+        for i, goal in enumerate(goals):
+            text_display.insert(ctk.END, f"({i + 1}). {goal.title}")
+            text_display.insert(ctk.END, f"    Target date: {goal.get_target_date()}\n")
+
+            for subgoal in goal.sub_goals:
+                text_display.insert(ctk.END, f"~~ {subgoal.title}")
+                text_display.insert(
+                    ctk.END, f"    Target date: {subgoal.get_target_date()}\n"
+                )
+
+            text_display.insert(ctk.END, "\n")
+
+        text_display.configure(state="disabled")
 
     def goal_adding_layout(self, goal_frame):
         """Creates the widgets for adding goals and subgoals"""
@@ -174,15 +240,14 @@ class GoalFrame:
             goal_selection_lbl.grid(column=1, row=0, pady=12, padx=12)
 
             # retrieve options for combobox
-            goals = models.db.all(Goal)
-            active_goals = []
-            for goal in goals:
-                if goal.status == "active":
-                    title = f"({goal.id}). {goal.title}"
-                    active_goals.append(title)
+            active_goals = self.get_active_goals_subgoals(Goal)
+            goal_titles = []
+            for i, goal in enumerate(active_goals):
+                title = f"({i + 1}). {goal.title}"
+                goal_titles.append(title)
 
             goal_cmbox = ctk.CTkComboBox(
-                add_frame, values=active_goals, width=240, height=38
+                add_frame, values=goal_titles, width=240, height=38
             )
             goal_cmbox.grid(column=1, row=1, pady=2, padx=12)
 

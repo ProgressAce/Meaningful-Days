@@ -44,7 +44,6 @@ class DBStorage:
 
         if not isinstance(clss, str):
             if str(clss) in classes or clss in classes.values():
-                print(self.__session)
                 q = self.__session.query(clss).all()
                 return q
 
