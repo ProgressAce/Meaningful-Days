@@ -236,7 +236,6 @@ class GoalFrame:
             add_frame, selectmode="day", date_pattern="y-mm-dd"
         )
         target_calendar.grid(column=0, row=3, pady=12, padx=12, rowspan=3)
-        print(type(target_calendar.parse_date(target_calendar.get_date())))
 
         # defining variables and widgets based on radio button selection
         if radio_var.get() == "goal":
@@ -316,10 +315,6 @@ class GoalFrame:
                 "The selected target date should be a future day that has not yet come"
             )
 
-        print("title:", title)
-        print("target date type:", type(target_date))
-        print("target date:", target_date)
-
         # Earn $10000 monthly as passive income from my online and offline businesses
 
     def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox):
@@ -347,11 +342,6 @@ class GoalFrame:
         if goal_title is None:
             raise ValueError("Please select a main goal that your new subgoal is for.")
 
-        print("title:", title)
-        print("target date type:", type(target_date))
-        print("target date:", target_date)
-        print("goal_title type:", type(goal_title))
-        print("goal_title:", goal_title)
 
     def save_new_goal(self):
         """Inserts a new goal or subgoal into its respective database table."""
