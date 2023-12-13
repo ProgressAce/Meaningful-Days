@@ -6,7 +6,9 @@ from tkinter import messagebox
 import customtkinter as ctk
 import tkcalendar as tkcal
 from models.goal import Goal
+from models.sub_goal import SubGoal
 import models
+import re
 
 
 class GoalFrame:
@@ -338,6 +340,7 @@ class GoalFrame:
                 "The selected target date should be a future day that has not yet come"
             )
 
+        # ensure that there is no existing goal with the same title
         existing_goal = models.db.get_active_title(Goal, title)
         if existing_goal is not None:
             messagebox.showerror(
@@ -346,6 +349,7 @@ class GoalFrame:
             )
             return None
 
+        # new goal creation and insertion into the database
         new_goal = Goal(title, target_date)
         new_goal.save()
         messagebox.showinfo(
@@ -356,34 +360,79 @@ class GoalFrame:
         self.remove_frame(add_window)
 
     # Become well-versed in healthy-baking and cooking
-    # Earn $10000 monthly as passive income from my online and offline businesses
+    # Develop a stronger core & physique
 
-    def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox):
+    def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox, add_window):
         """Inserts a new subgoal into the subgoal database table."""
 
         title = title_entry.get()
         target_date = target_calendar.parse_date(target_calendar.get_date())
-        goal_title = goal_cmbox.get()
+        goal_title = re.split(r"^\([0-9]+\)\. ", goal_cmbox.get(), maxsplit=1)[1]
         today = date.today()
 
         # validate args
-        if not isinstance(title_entry.get(), str):
+        if not isinstance(title, str):
+            messagebox.showerror(
+                "Error",
+                "The title should contain atleast some letters. We only speak ascii :(",
+            )
             raise TypeError(
                 "The title should contain atleast some letters. We only speak ascii :("
             )
 
         if len(title) < 1 or len(title) > 50:
+            messagebox.showerror(
+                "Error",
+                "The title should be between 1 and 50 characters long.",
+            )
             raise ValueError("The title should be between 1 and 50 characters long.")
 
         if target_date <= today:
+            messagebox.showerror(
+                "Error",
+                "The selected target date should be a future day that has not yet come",
+            )
             raise ValueError(
                 "The selected target date should be a future day that has not yet come"
             )
 
         if goal_title is None:
+            messagebox.showerror(
+                "Error",
+                "Please select a main goal that your new subgoal is for.",
+            )
             raise ValueError("Please select a main goal that your new subgoal is for.")
 
-        d
+        # double surity that the selected goal exists and obtaining its id
+        existing_goal = models.db.get_active_title(Goal, goal_title)
+        if existing_goal is None:
+            messagebox.showerror(
+                "Issue with selected goal.",
+                "The selected goal does not exist. This is most likely due to an"
+                + "error on our end and we apologise for the inconvenience.",
+            )
+            return None
+        goal_id = existing_goal.id
+
+        # ensure that there is no existing subgoal with the same title
+        existing_subgoal = models.db.get_active_title(SubGoal, title)
+        if existing_subgoal is not None:
+            messagebox.showerror(
+                "Issue creating subgoal.",
+                "The subgoal you are trying to created is active and already exists."
+                + "Change your title name so you don't create duplicate.",
+            )
+            return None
+
+        # new subgoal creation and insertion into the database
+        new_subgoal = SubGoal(title, target_date, goal_id)
+        new_subgoal.save()
+        messagebox.showinfo(
+            "Success",
+            "Your new goal was created successfully. All the best in rising up to fulfill it '~'",
+        )
+        self.info_status = "success"
+        self.remove_frame(add_window)
 
         # list of active goals from database, dropdown menu list of
         # active subgoals belong to a specific goal
