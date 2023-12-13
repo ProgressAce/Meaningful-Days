@@ -54,12 +54,13 @@ class DBStorage:
 
         Returns the record if found, otherwise returns 'None'."""
 
-        if clss in classes.values():
-            q = (
-                self.__session.query(clss)
-                .filter(clss.title == title, clss.status == "active")
-                .first()
-            )
-            return q
+        if isinstance(title, str):
+            if clss in classes.values():
+                q = (
+                    self.__session.query(clss)
+                    .filter(clss.title == title, clss.status == "active")
+                    .first()
+                )
+                return q
 
         return None
