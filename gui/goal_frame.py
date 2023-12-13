@@ -30,6 +30,9 @@ class GoalFrame:
         # for goal_frame's add_frame
         self.current_add_frame = None
 
+        # for checking if information is being added
+        self.info_status = "success"
+
         self.load_goal_frame()
 
     def remove_frame(self, frame):
@@ -40,19 +43,21 @@ class GoalFrame:
                 child.destroy()
             frame.destroy()
 
-    def on_close(self, window):
+    def on_close(self, window, info_status):
         """Handles event when window is exited.
 
         The current_add_frame is set to None so that when the add_window is closed
         and reopened, the current_add_frame won't hold onto parent window
         which was destroyed on exit.
         """
-        if messagebox.askokcancel(
-            "Closing the current window",
-            "Are you certain you want to close it? Unsaved information will be lost.",
-        ):
-            self.current_add_frame = None
-            window.destroy()
+
+        if info_status == "pending":
+            if messagebox.askokcancel(
+                "Closing the current window",
+                "Are you certain you want to close it? Unsaved information will be lost.",
+            ):
+                self.current_add_frame = None
+                window.destroy()
 
     def center(self, top_window):
         """Finds the center of the screen and centers the toplevel window."""
@@ -205,8 +210,9 @@ class GoalFrame:
     def add_form(self, add_window, radio_var):
         """Create the widgets for entering information for a new goal."""
 
+        self.info_status = "pending"
         # handles the event of the add window closing
-        on_close_method = partial(self.on_close, add_window)
+        on_close_method = partial(self.on_close, add_window, self.info_status)
         add_window.protocol("WM_DELETE_WINDOW", on_close_method)
 
         self.remove_frame(self.current_add_frame)
@@ -241,7 +247,9 @@ class GoalFrame:
         if radio_var.get() == "goal":
             goal_text = "Enter the new goal:"
             submit_btn_text = "Submit new goal '~'"
-            submit_command = partial(self.create_new_goal, title_entry, target_calendar)
+            submit_command = partial(
+                self.create_new_goal, title_entry, target_calendar, add_window
+            )
 
         elif radio_var.get() == "subgoal":
             goal_text = "Enter the new subgoal:"
@@ -268,7 +276,11 @@ class GoalFrame:
 
             submit_btn_text = "Submit new subgoal '~'"
             submit_command = partial(
-                self.create_new_subgoal, title_entry, target_calendar, goal_cmbox
+                self.create_new_subgoal,
+                title_entry,
+                target_calendar,
+                goal_cmbox,
+                add_window,
             )
 
         title_lbl = ctk.CTkLabel(
@@ -293,7 +305,7 @@ class GoalFrame:
         )
         submit_btn.grid(column=0, row=7, pady=10, padx=10, columnspan=2, rowspan=2)
 
-    def create_new_goal(self, title_entry, target_calendar):
+    def create_new_goal(self, title_entry, target_calendar, add_window):
         """Inserts a new goal into the goal database table."""
 
         title = title_entry.get()
@@ -301,21 +313,50 @@ class GoalFrame:
         today = date.today()
 
         # validate args
-        if not isinstance(title_entry.get(), str):
+        if not isinstance(title, str):
+            messagebox.showerror(
+                "Error",
+                "The title should contain atleast some letters. We only speak ascii :(",
+            )
             raise TypeError(
                 "The title should contain atleast some letters. We only speak ascii :("
             )
 
         if len(title) < 1 or len(title) > 50:
+            messagebox.showerror(
+                "Error",
+                "The title should be between 1 and 50 characters long.",
+            )
             raise ValueError("The title should be between 1 and 50 characters long.")
 
-        print("target date type:", type(target_date))
         if target_date <= today:
+            messagebox.showerror(
+                "Error",
+                "The selected target date should be a future day that has not yet come",
+            )
             raise ValueError(
                 "The selected target date should be a future day that has not yet come"
             )
 
-        # Earn $10000 monthly as passive income from my online and offline businesses
+        existing_goal = models.db.get_active_title(Goal, title)
+        if existing_goal is not None:
+            messagebox.showerror(
+                "Issue creating goal.",
+                "The goal you created is active and already exists. Your title name is a duplicate.",
+            )
+            return None
+
+        new_goal = Goal(title, target_date)
+        new_goal.save()
+        messagebox.showinfo(
+            "Success",
+            "Your new goal was created successfully. All the best in rising up to fulfill it '~'",
+        )
+        self.info_status = "success"
+        self.remove_frame(add_window)
+
+    # Become well-versed in healthy-baking and cooking
+    # Earn $10000 monthly as passive income from my online and offline businesses
 
     def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox):
         """Inserts a new subgoal into the subgoal database table."""
@@ -342,10 +383,7 @@ class GoalFrame:
         if goal_title is None:
             raise ValueError("Please select a main goal that your new subgoal is for.")
 
-
-    def save_new_goal(self):
-        """Inserts a new goal or subgoal into its respective database table."""
-        pass
+        d
 
         # list of active goals from database, dropdown menu list of
         # active subgoals belong to a specific goal
