@@ -42,9 +42,25 @@ class DBStorage:
         Return:
             a list of all the rows."""
 
-        if not isinstance(clss, str):
-            if str(clss) in classes or clss in classes.values():
-                q = self.__session.query(clss).all()
+        if clss in classes.values():
+            q = self.__session.query(clss).all()
+            return q
+
+        return None
+
+    def get_active_title(self, clss, title):
+        """Query database to obtain the first record of the specified table:
+        with matching <title> name and an <active> status.
+
+        Returns the record if found, otherwise returns 'None'."""
+
+        if isinstance(title, str):
+            if clss in classes.values():
+                q = (
+                    self.__session.query(clss)
+                    .filter(clss.title == title, clss.status == "active")
+                    .first()
+                )
                 return q
 
         return None
