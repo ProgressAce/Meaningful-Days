@@ -1,0 +1,128 @@
+/* reset */
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* end of reset */
+
+#showcase {
+    background-image: url('../img/pexels-ethan-wu-background.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 0 20px;
+}
+
+#showcase h1 {
+    font-size: small;
+}
+
+/* global styling */
+body {
+    max-width: 2000px;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgb(23, 23, 23);
+    background-color: rgb(167 243 208);
+}
+
+.navbar {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+    background-color: rgb(20 184 166);
+}
+
+.nav-div {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-img {
+    width: 12rem 16rem 18rem;
+}
+
+.nav-a {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    top: 2.25rem;
+    z-index: 50;
+}
+
+.container {
+    width: 100%;
+}
+
+h1 {
+    color: coral;
+    text-align: center;
+}
+
+
+
+
+
+html,
+body,
+header,
+#intro {
+    height: 100%;
+}
+
+#intro {
+    /*background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img%20%283%29.jpg")no-repeat center center fixed;*/
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
