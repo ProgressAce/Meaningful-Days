@@ -358,9 +358,7 @@ class GoalFrame:
         )
         self.info_status = "success"
         self.remove_frame(add_window)
-
-    # Become well-versed in healthy-baking and cooking
-    # Develop a stronger core & physique
+        self.current_add_frame = None
 
     def create_new_subgoal(self, title_entry, target_calendar, goal_cmbox, add_window):
         """Inserts a new subgoal into the subgoal database table."""
@@ -433,6 +431,7 @@ class GoalFrame:
         )
         self.info_status = "success"
         self.remove_frame(add_window)
+        self.current_add_frame = None
 
         # list of active goals from database, dropdown menu list of
         # active subgoals belong to a specific goal
