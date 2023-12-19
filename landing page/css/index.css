@@ -203,36 +203,55 @@ main {
   padding-left: 80px;
   padding-right: 80px;
 }
-main .intro {
+main #intro {
   padding-bottom: 150px;
 }
-main .intro h2 {
+main #intro h2 {
   font-size: 50px;
   font-weight: bold;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   text-align: center;
 }
-main .intro p {
+main #intro p {
   font-size: 34px;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   text-align: center;
 }
-main .features h3 {
+
+main #features h3 {
   font-size: 36px;
   font-style: italic;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
-main .features .feat-container {
+main #features .feat-container {
   display: flex;
 
   font-size: 28px;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   padding-bottom: 140px;
 }
-main .features .feat-container .text {
+main #features .feat-container .text {
   float: left;
 }
-main .features .feat-container .image {
+main #features .feat-container .image {
   float: left;
   padding-left: 100px;
+}
+
+main #about h3 {
+  font-size: 28px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+main #about p {
+  font-size: 22px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+main #about .socials {
+  font-size: 22px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  padding-top: 45px;
+}
+main #about span a {
+  font-size: 26px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
