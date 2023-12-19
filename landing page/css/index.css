@@ -49,80 +49,85 @@ table {
 }
 /* end of reset */
 
-#showcase {
+body {
     background-image: url('../img/pexels-ethan-wu-background.jpg');
     background-size: cover;
     background-position: center;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    padding: 0 20px;
-}
-
-#showcase h1 {
-    font-size: small;
+    width: 100%;
 }
 
 /* global styling */
 body {
     max-width: 2000px;
-    margin-left: auto;
-    margin-right: auto;
     color: rgb(23, 23, 23);
-    background-color: rgb(167 243 208);
 }
 
-.navbar {
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1rem;
-    background-color: rgb(20 184 166);
-}
-
-.nav-div {
-    margin-left: auto;
-    margin-right: auto;
+.navbar{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.4rem;
+    background-color: rgb(158, 158, 158);
+}
+.navbar a {
+    color: #000;
+    font-size: larger;
+    text-decoration: none;
+    padding: 10px;
+    text-align: center;
+}
+.navbar ul li{
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 10px;
+}
+.navbar ul li a{
+    color: rgb(22, 22, 22);
+    text-decoration: none;
+    font-weight: bold;
+}
+.navbar ul li a:hover{
+    background-color: rgb(107, 107, 107);
+}
+
+button{
+    border: none;
+    background: whitesmoke;
+    padding: 12px 38px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: .4s;
+}
+
+button:hover{
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .nav-img {
     width: 12rem 16rem 18rem;
 }
 
-.nav-a {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    top: 2.25rem;
-    z-index: 50;
+/**
+ main
+*/
+
+main{
+    padding-top: 150px;
+    padding-bottom: 100px;
+    padding-left: 80px;
+    padding-right: 80px;
 }
-
-.container {
-    width: 100%;
+main .intro h3{
+    font-size: 50px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
-
-h1 {
-    color: coral;
-    text-align: center;
-}
-
-
-
-
-
-html,
-body,
-header,
-#intro {
-    height: 100%;
-}
-
-#intro {
-    /*background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img%20%283%29.jpg")no-repeat center center fixed;*/
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+main .intro p{
+    font-size: 34px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
