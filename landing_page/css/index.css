@@ -246,7 +246,7 @@ main #about p {
   font-size: 22px;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
-main #about .socials {
+main #about #socials {
   font-size: 22px;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   padding-top: 45px;
